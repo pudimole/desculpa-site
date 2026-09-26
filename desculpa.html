@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Desculpa 🥺</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,.8), transparent 30%),
+        radial-gradient(circle at 80% 80%, rgba(255,180,200,.35), transparent 35%),
+        linear-gradient(135deg, #fff1f5, #ffe4ec);
+      position: relative;
+    }
+
+    .card {
+      width: min(92vw, 520px);
+      padding: 52px 28px 46px;
+      text-align: center;
+      border-radius: 28px;
+      background: rgba(255,255,255,.78);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 20px 60px rgba(180, 70, 100, .18);
+      border: 1px solid rgba(255,255,255,.9);
+      position: relative;
+      z-index: 2;
+    }
+
+    h1 {
+      margin: 0 0 36px;
+      color: #29232a;
+      font-size: clamp(2.3rem, 9vw, 4rem);
+      letter-spacing: -2px;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 18px;
+      min-height: 58px;
+      position: relative;
+    }
+
+    button {
+      border: 0;
+      border-radius: 14px;
+      padding: 15px 32px;
+      min-width: 125px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 8px 18px rgba(0,0,0,.12);
+      transition: transform .15s ease, box-shadow .15s ease;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      user-select: none;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(0,0,0,.16);
+    }
+
+    #yes {
+      background: linear-gradient(135deg, #31c56b, #20a957);
+      position: relative;
+      z-index: 5;
+    }
+
+    #no {
+      background: linear-gradient(135deg, #ff5b67, #e63846);
+      position: fixed;
+      z-index: 10;
+      left: 50%;
+      top: calc(50% + 65px);
+      transform: translateX(145px);
+    }
+
+    #no:hover { transform: none; }
+
+    .heart {
+      position: fixed;
+      color: rgba(255, 91, 120, .22);
+      font-size: 22px;
+      animation: float 5s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes float {
+      from { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+      15% { opacity: 1; }
+      to { transform: translateY(-15vh) rotate(360deg); opacity: 0; }
+    }
+
+    @media (max-width: 600px) {
+      .card {
+        padding: 42px 20px 40px;
+      }
+
+      .buttons {
+        min-height: 55px;
+      }
+
+      button {
+        min-width: 110px;
+        padding: 14px 24px;
+      }
+
+      #no {
+        top: calc(50% + 62px);
+        transform: translateX(70px);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h1>Desculpa 🥺</h1>
+    <div class="buttons">
+      <button id="yes" onclick="goToVideo()">Sim</button>
+    </div>
+  </div>
+
+  <button id="no" aria-label="Não">Não</button>
+
+  <script>
+    const no = document.getElementById("no");
+
+    function goToVideo() {
+      window.location.href = "https://youtu.be/IRZIMGxxgf8?si=Z6_M5j5IyNnvAXkS";
+    }
+
+    function moveNo() {
+      const margin = 12;
+      const rect = no.getBoundingClientRect();
+
+      const maxX = Math.max(margin, window.innerWidth - rect.width - margin);
+      const maxY = Math.max(margin, window.innerHeight - rect.height - margin);
+
+      let x, y;
+      let tries = 0;
+
+      do {
+        x = Math.random() * (maxX - margin) + margin;
+        y = Math.random() * (maxY - margin) + margin;
+        tries++;
+      } while (
+        tries < 80 &&
+        x < window.innerWidth / 2 + 180 &&
+        x + rect.width > window.innerWidth / 2 - 180 &&
+        y < window.innerHeight / 2 + 140 &&
+        y + rect.height > window.innerHeight / 2 - 140
+      );
+
+      no.style.left = x + "px";
+      no.style.top = y + "px";
+      no.style.transform = "none";
+    }
+
+    // PC: foge quando o mouse chega perto.
+    no.addEventListener("mouseenter", moveNo);
+
+    // Celular: foge no toque, antes do clique acontecer.
+    no.addEventListener("touchstart", function(e) {
+      e.preventDefault();
+      moveNo();
+    }, { passive: false });
+
+    // Também cobre cliques que conseguirem passar pelo movimento.
+    no.addEventListener("click", function(e) {
+      e.preventDefault();
+      moveNo();
+    });
+
+    window.addEventListener("resize", () => {
+      const r = no.getBoundingClientRect();
+      if (r.right > window.innerWidth || r.bottom > window.innerHeight) {
+        moveNo();
+      }
+    });
+
+    // Corações decorativos.
+    for (let i = 0; i < 12; i++) {
+      const heart = document.createElement("div");
+      heart.className = "heart";
+      heart.textContent = "♥";
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.animationDelay = Math.random() * 5 + "s";
+      heart.style.animationDuration = (4 + Math.random() * 4) + "s";
+      document.body.appendChild(heart);
+    }
+  </script>
+
+</body>
+</html>
